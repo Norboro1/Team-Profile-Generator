@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const generateHTML = require('./src/generateHTML.js');
 const { Employee, Manager, Intern, Engineer } = require('./lib/index.js');
 const fs = require('fs');
 
@@ -140,3 +141,41 @@ const employeeQuestions = [
         default: false
     }
 ];
+
+const promptManager = () => {
+    return inquirer.prompt(managerQuestions)
+        .then(managerData => {
+            const { name, id, email, officeNumber } = managerData;
+            const manager = new Manager(name, id, email, officeNumber);
+            team.push(manager);
+        });
+}
+
+const promptEmployee = () => {
+    return inquirer.prompt(employeeQuestions)
+        .then(employeeData => {
+            let { name, id, email, role, github, school, confirmAddEmployee } = employeeData;
+            let employee;
+            if (role === 'Engineer') {
+                employee = new Engineer(name, id, email, github);
+            } else if (role === 'Intern') {
+                employee = new Intern(name, id, email, school);
+            }
+            team.push(employee);
+            if (confirmAddEmployee) {
+                return promptEmployee();
+            } else {
+                return team;
+            }
+        });
+}
+
+const init = () => {
+    promptManager()
+        .then(promptEmployee)
+        .then(team => {
+            return generateTeam(team);
+        })
+}
+
+init();
