@@ -1,0 +1,13 @@
+header {
+    background-color: rgb(224, 83, 83);
+    color: white;
+}
+
+.card {
+    overflow: hidden;
+}
+
+.card-header{
+    color: white;
+}
+

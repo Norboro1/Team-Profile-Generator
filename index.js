@@ -170,12 +170,31 @@ const promptEmployee = () => {
         });
 }
 
+const writeFile = fileContent => {
+    return new Promise((resolve, reject) => {
+        fs.writeFile('./dist/index.html', fileContent, err => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve({
+                ok: true,
+                message: 'File created!'
+            });
+        });
+    });
+};
+
 const init = () => {
     promptManager()
         .then(promptEmployee)
         .then(team => {
-            return generateTeam(team);
+            return generateHTML(team);
         })
+        .then(pageHTML => {
+            return writeFile(pageHTML);
+        })
+
 }
 
 init();
